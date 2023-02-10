@@ -1,53 +1,29 @@
 pipeline {
     agent any
-
+    
     tools {
-        maven "M3"
-        jdk "JDK11"
+        maven 'M3'
+        jdk 'JDK11'
     }
-
+    
     stages {
-        stage('Git Clone') {
+        stage ('Git init') {
             steps {
-                echo 'Git Clone'
-                git url: 'https://github.com/s4616/spring-petclinic.git',
+                echo 'Git Init'
+                git url:'https://github.com/superstarseonhoon/spring-petclinic.git/',
                 branch: 'main', credentialsId: 'gitCredentials'
-            }
-            post {
-                success {
-                    echo 'Git Clone Success'
-                }
-                failure {
-                    echo 'Git Clone Fail'
-                }
             }
         }
         stage('Build') {
             steps {
                 echo 'Build'
-                sh 'mvn -Dmaven.test.failure.ignore=true clean package'
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml'
-                }
+                sh 'mvn -Dmaven.test.failure.ignore=ture clean package'
             }
         }
-        stage('Docker Image') {
+        stage('Deploy') {
             steps {
-                echo 'Docker Image'
-            }            
-        }
-        stage('Docker Push') {
-            steps {
-                echo 'Docker Push'
-            }            
-        }
-        stage('Target Deploy') {
-            steps {
-                echo 'Target Deploy'                
-            }            
-        }
-
+                echo 'Deploy'
+            }
+        }  
     }
 }
